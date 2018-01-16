@@ -1,6 +1,8 @@
 alpine-minio
 ===============
 
+This is a fork of https://github.com/disaster37/alpine-minio Thanks to Sebastien LANGOUREAUX for his work!
+
 This image permit run Minio Cloud Storage as standalone or as a cluster.
 
 ## How use it
@@ -97,6 +99,8 @@ docker run --rm --name minio4 \
   webcenter/alpine-minio:latest
 ```
 
+### TLS (required for server side encryption)
+- TLS_FQDN: Set this to a FQDN and the container will create a self singed certificate and start minio with https. Default is http.
 
 ### Parameters
 

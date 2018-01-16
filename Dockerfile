@@ -1,5 +1,5 @@
 FROM alpine:3.6
-MAINTAINER Sebastien LANGOUREAUX (linuxworkgroup@hotmail.com)
+MAINTAINER Matthias Schneider <ms@wck.biz>
 
 # Application settings
 ENV CONFD_PREFIX_KEY="/minio" \
@@ -8,16 +8,17 @@ ENV CONFD_PREFIX_KEY="/minio" \
     CONFD_NODES="" \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     APP_HOME="/opt/minio" \
-    APP_VERSION="RELEASE.2017-11-22T19-55-46Z" \
+    APP_VERSION="RELEASE.2018-01-02T23-07-00Z" \
     SCHEDULER_VOLUME="/opt/scheduler" \
     USER=minio \
     GROUP=minio \
     UID=10003 \
     GID=10003 \
     CONTAINER_NAME="alpine-minio" \
-    CONTAINER_AUHTOR="Sebastien LANGOUREAUX <linuxworkgroup@hotmail.com>" \
-    CONTAINER_SUPPORT="https://github.com/disaster37/alpine-minio/issues" \
-    APP_WEB="https://minio.io/"
+    CONTAINER_AUHTOR="Matthias Schneider <ms@wck.biz>" \
+    CONTAINER_SUPPORT="https://github.com/mschneider82/alpine-minio/issues" \
+    APP_WEB="https://minio.io/" \
+    TLS_FQDN=""
 
 # Install extra package
 RUN apk --update add fping curl bash &&\
@@ -55,11 +56,16 @@ RUN \
     addgroup -g ${GID} ${GROUP} && \
     adduser -g "${USER} user" -D -h ${APP_HOME} -G ${GROUP} -s /bin/sh -u ${UID} ${USER}
 
+# Install generate_cert
+RUN curl -fgL -o /usr/bin/generate_cert https://github.com/SvenDowideit/generate_cert/releases/download/0.3/generate_cert-0.3-linux-amd64 && \
+    chmod +x /usr/bin/generate_cert
+
+
+RUN mkdir -p ${APP_HOME}/.minio/certs
 
 ADD root /
 RUN chmod +x ${APP_HOME}/bin/* &&\
     chown -R ${USER}:${GROUP} ${APP_HOME}
-
 
 VOLUME ["/data"]
 EXPOSE 9000
